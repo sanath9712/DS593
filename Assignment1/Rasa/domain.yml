@@ -8,13 +8,24 @@ intents:
   - mood_great
   - mood_unhappy
   - bot_challenge
+  - order_studentid
+  - provide_student_id
+  - provide_test_type
+  - provide_test_status
+  - report_covid
+
+entities:
+  - student_id
+  - test_type
+  - test_status
 
 responses:
+
   utter_greet:
-  - text: "Hey! How are you?"
+  - text: "Hey! Who are you?"
 
   utter_cheer_up:
-  - text: "Here is something to cheer you up:"
+  - text: "Here is something to cheer you up cabron:"
     image: "https://i.imgur.com/nGF1K8f.jpg"
 
   utter_did_that_help:
@@ -27,7 +38,26 @@ responses:
   - text: "Bye"
 
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+  - text: "I am a bot created to assist the students of acme university."
+
+  utter_order_studentid:
+  - text: "Here is your Student ID u loco"
+
+  utter_ask_student_id:
+  - text: "What is your student ID?"
+
+  utter_student_card_confirmation:
+  - text: "I have noted your request to order a student card. It will be sent to your address within 3 working days."
+
+  utter_ask_test_type:
+  - text: "What type of COVID test did you take? (PCR, rapid, antigen, antibody, saliva, nasal swab)"
+
+  utter_ask_test_status:
+  - text: "Did your COVID test come back positive or negative?"
+
+  utter_report_covid_confirmation:
+  - text: "Thank you for letting us know. We will reach out to you shortly with next steps based on your test results."
+
 
 session_config:
   session_expiration_time: 60

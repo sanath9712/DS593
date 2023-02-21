@@ -1,6 +1,67 @@
 version: "3.1"
 
 nlu:
+
+- intent: order_studentid
+  examples: |
+    - StudentID
+    - I need my studentID
+    - I am ordering a studentID
+    - Identify me
+    - Give me an Identity
+    - Give me some sunshine
+    - I want ID
+    - I want to order a student card
+    - Can you help me order a student card
+    - How do I get a student card
+    - What's the process for getting a student card
+    - I need a new student card
+    - Can you order me a new student card
+    - How can I get a new student card
+    - I lost my student card, can I get a new one
+    - I need to replace my student card
+
+- intent: provide_student_id
+  examples: |
+    - My student ID is [12345](student_id)
+    - It's [98765](student_id)
+    - [24680](student_id)
+    - The ID is [13579](student_id)
+    
+- intent: report_covid
+  examples: |
+    - I tested positive for COVID
+    - I tested negative for COVID
+    - I have COVID
+    - I don't have COVID
+    - I was diagnosed with COVID
+    - I got tested for COVID
+    - My COVID test came back positive
+    - My COVID test came back negative
+    - I have symptoms of COVID
+    - I don't have any COVID symptoms
+    - I think I have COVID
+    - I don't think I have COVID
+    - I want to report my COVID status
+
+- intent: provide_test_type
+  examples: |
+    - PCR test
+    - Rapid test
+    - Antigen test
+    - Antibody test
+    - Saliva test
+    - Nasal swab test
+
+
+- intent: provide_test_status
+  examples: |
+    - Positive
+    - Negative
+    - Unknown
+    - +ve
+    - -ve
+    
 - intent: greet
   examples: |
     - hey

@@ -8,6 +8,8 @@ stories:
   - action: utter_greet
   - intent: mood_great
   - action: utter_happy
+  - intent: order_studentid
+  - action: utter_order_studentid
 
 - story: sad path 1
   steps:
@@ -18,6 +20,8 @@ stories:
   - action: utter_did_that_help
   - intent: affirm
   - action: utter_happy
+  - intent: order_studentid
+  - action: utter_order_studentid
 
 - story: sad path 2
   steps:
@@ -28,3 +32,37 @@ stories:
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
+  - intent: order_studentid
+  - action: utter_order_studentid
+
+- story: order ID
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: order_studentid
+  - action: utter_ask_student_id
+  - intent: provide_student_id
+    entities:
+    - student_id
+  - action: utter_student_card_confirmation
+
+
+- story: Report COVID test results
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: report_covid
+  - action: utter_ask_student_id
+  - intent: provide_student_id
+    entities:
+    - student_id
+  - action: utter_ask_test_type
+  - intent: provide_test_type
+    entities:
+    - test_type
+  - action: utter_ask_test_status
+  - intent: provide_test_status
+    entities:
+    - test_status
+  - action: utter_report_covid_confirmation
+
