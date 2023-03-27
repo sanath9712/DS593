@@ -20,6 +20,11 @@ train_data = pd.read_csv('data/archive/atis_intents_train.csv', names=['intent',
 test_data = pd.read_csv('data/archive/atis_intents_test.csv', names=['intent', 'text'])
 intent_mapping = pd.read_csv("data/archive/atis_intents.csv", names=["intent"])
 
+# Filter only desired intents
+selected_intents = ["atis_flight", "atis_flight_time", "atis_aircraft"]
+train_data = train_data[train_data["intent"].isin(selected_intents)]
+test_data = test_data[test_data["intent"].isin(selected_intents)]
+
 # Map intent labels to indices
 intent_to_index = {row["intent"]: index for index, row in intent_mapping.iterrows()}
 
@@ -75,6 +80,14 @@ print("Logistic Regression with CountVectorizer:")
 print(f"Computation Time: {lr_time:.4f} seconds")
 print(f"Confusion Matrix:\n{cm_lr}\n")
 
+# Evaluate performance
+lr_accuracy = accuracy_score(y_test, lr_predictions)
+lr_precision = precision_score(y_test, lr_predictions, average='weighted')
+lr_recall = recall_score(y_test, lr_predictions, average='weighted')
+lr_f1 = f1_score(y_test, lr_predictions, average='weighted')
+
+print("Logistic Regression Performance:")
+print(f"Accuracy: {lr_accuracy:.4f}, Precision: {lr_precision:.4f}, Recall: {lr_recall:.4f}, F1-score: {lr_f1:.4f}\n")
 
 # Train Multinomial Naive Bayes
 start_time = time.time()
@@ -89,6 +102,14 @@ print("Multinomial Naive Bayes with CountVectorizer:")
 print(f"Computation Time: {nb_time:.4f} seconds")
 print(f"Confusion Matrix:\n{cm_nb}\n")
 
+# Evaluate performance
+nb_accuracy = accuracy_score(y_test, nb_predictions)
+nb_precision = precision_score(y_test, nb_predictions, average='weighted')
+nb_recall = recall_score(y_test, nb_predictions, average='weighted')
+nb_f1 = f1_score(y_test, nb_predictions, average='weighted')
+
+print("\nMultinomial Naive Bayes Performance:")
+print(f"Accuracy: {nb_accuracy:.4f}, Precision: {nb_precision:.4f}, Recall: {nb_recall:.4f}, F1-score: {nb_f1:.4f}\n")
 
 # Train SVM
 start_time = time.time()
@@ -103,41 +124,15 @@ print("SVM with CountVectorizer:")
 print(f"Computation Time: {svm_time:.4f} seconds")
 print(f"Confusion Matrix:\n{cm_svm}\n")
 
-# Predict on test data
-#lr_predictions = lr_classifier.predict(X_test_tfidf)
-#nb_predictions = nb_classifier.predict(X_test_tfidf)
-#svm_predictions = svm_classifier.predict(X_test_tfidf)
-
-
 # Evaluate performance
-lr_accuracy = accuracy_score(y_test, lr_predictions)
-nb_accuracy = accuracy_score(y_test, nb_predictions)
 svm_accuracy = accuracy_score(y_test, svm_predictions)
-
-
-lr_precision = precision_score(y_test, lr_predictions, average='weighted')
-nb_precision = precision_score(y_test, nb_predictions, average='weighted')
 svm_precision = precision_score(y_test, svm_predictions, average='weighted')
-
-
-
-lr_recall = recall_score(y_test, lr_predictions, average='weighted')
-nb_recall = recall_score(y_test, nb_predictions, average='weighted')
 svm_recall = recall_score(y_test, svm_predictions, average='weighted')
-
-
-lr_f1 = f1_score(y_test, lr_predictions, average='weighted')
-nb_f1 = f1_score(y_test, nb_predictions, average='weighted')
 svm_f1 = f1_score(y_test, svm_predictions, average='weighted')
 
-print("Logistic Regression Performance:")
-print(f"Accuracy: {lr_accuracy:.4f}, Precision: {lr_precision:.4f}, Recall: {lr_recall:.4f}, F1-score: {lr_f1:.4f}")
-
-print("\nMultinomial Naive Bayes Performance:")
-print(f"Accuracy: {nb_accuracy:.4f}, Precision: {nb_precision:.4f}, Recall: {nb_recall:.4f}, F1-score: {nb_f1:.4f}")
-
 print("\nSVM Performance:")
-print(f"Accuracy: {svm_accuracy:.4f}, Precision: {svm_precision:.4f}, Recall: {svm_recall:.4f}, F1-score: {svm_f1:.4f}")
+print(f"Accuracy: {svm_accuracy:.4f}, Precision: {svm_precision:.4f}, Recall: {svm_recall:.4f}, F1-score: {svm_f1:.4f}\n")
+
 
 # Print classification report
 print("\nLogistic Regression Classification Report:")
