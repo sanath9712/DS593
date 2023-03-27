@@ -6,8 +6,10 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report, \
+    confusion_matrix
 from sklearn.svm import SVC
+import time
 
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -20,19 +22,6 @@ intent_mapping = pd.read_csv("data/archive/atis_intents.csv", names=["intent"])
 
 # Map intent labels to indices
 intent_to_index = {row["intent"]: index for index, row in intent_mapping.iterrows()}
-print(type(intent_to_index))
-print(list(intent_to_index.values())[10])
-print(list(intent_to_index.keys())[10])
-print(list(intent_to_index.values())[12])
-print(list(intent_to_index.keys())[12])
-print(list(intent_to_index.values())[15])
-print(list(intent_to_index.keys())[15])
-
-print(train_data)
-#train_data["intent"] = train_data["intent"].map(intent_to_index)
-
-print(train_data)
-#test_data["intent"] = test_data["intent"].map(intent_to_index)
 
 # Drop rows with NaN values in 'intent'
 train_data = train_data.dropna(subset=['intent'])
@@ -48,6 +37,13 @@ def preprocess_text(text):
     # Tokenize
     words = nltk.word_tokenize(text)
 
+    # Remove stopwords
+    words = [word for word in words if word not in stopwords.words('english')]
+
+    # Lemmatize
+    lemmatizer = WordNetLemmatizer()
+    words = [lemmatizer.lemmatize(word) for word in words]
+
     return ' '.join(words)
 
 
@@ -61,26 +57,56 @@ y_train = train_data['intent']
 y_test = test_data['intent']
 
 # Feature extraction
+#vectorizer = TfidfVectorizer()
 vectorizer = CountVectorizer()
 X_train_tfidf = vectorizer.fit_transform(X_train)
 X_test_tfidf = vectorizer.transform(X_test)
 
 # Train Logistic Regression
+start_time = time.time()
 lr_classifier = LogisticRegression()
 lr_classifier.fit(X_train_tfidf, y_train)
+lr_predictions = lr_classifier.predict(X_test_tfidf)
+lr_time = time.time() - start_time
+
+# Generate confusion matrix for Logistic Regression with CountVectorizer
+cm_lr = confusion_matrix(y_test, lr_predictions)
+print("Logistic Regression with CountVectorizer:")
+print(f"Computation Time: {lr_time:.4f} seconds")
+print(f"Confusion Matrix:\n{cm_lr}\n")
+
 
 # Train Multinomial Naive Bayes
+start_time = time.time()
 nb_classifier = MultinomialNB()
 nb_classifier.fit(X_train_tfidf, y_train)
+nb_predictions = nb_classifier.predict(X_test_tfidf)
+nb_time = time.time() - start_time
+
+# Generate confusion matrix for Multinomial Naive Bayes with CountVectorizer
+cm_nb = confusion_matrix(y_test, nb_predictions)
+print("Multinomial Naive Bayes with CountVectorizer:")
+print(f"Computation Time: {nb_time:.4f} seconds")
+print(f"Confusion Matrix:\n{cm_nb}\n")
+
 
 # Train SVM
+start_time = time.time()
 svm_classifier = SVC(kernel='linear', C=1.0, random_state=0)
 svm_classifier.fit(X_train_tfidf, y_train)
+svm_predictions = svm_classifier.predict(X_test_tfidf)
+svm_time = time.time() - start_time
+
+# Generate confusion matrix for SVM with CountVectorizer
+cm_svm = confusion_matrix(y_test, svm_predictions)
+print("SVM with CountVectorizer:")
+print(f"Computation Time: {svm_time:.4f} seconds")
+print(f"Confusion Matrix:\n{cm_svm}\n")
 
 # Predict on test data
-lr_predictions = lr_classifier.predict(X_test_tfidf)
-nb_predictions = nb_classifier.predict(X_test_tfidf)
-svm_predictions = svm_classifier.predict(X_test_tfidf)
+#lr_predictions = lr_classifier.predict(X_test_tfidf)
+#nb_predictions = nb_classifier.predict(X_test_tfidf)
+#svm_predictions = svm_classifier.predict(X_test_tfidf)
 
 
 # Evaluate performance
