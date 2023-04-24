@@ -1,0 +1,10 @@
+version: "3.1"
+stories:
+- story: order ID (./tests/test_stories.yml)
+  steps:
+  - intent: greet
+  - action: action_dialog_gpt  # predicted: utter_greet
+  - intent: order_studentid
+  - action: utter_ask_student_id  # predicted: action_unlikely_intent
+  - intent: provide_student_id  # predicted: get_student_id: My student ID is 151617
+  - action: utter_student_card_confirmation  # predicted: action_default_fallback
